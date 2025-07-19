@@ -19,6 +19,11 @@ const Index = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [applicationStep, setApplicationStep] = useState(1);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [chatMessages, setChatMessages] = useState([
+    { id: 1, text: "Здравствуйте! Я помогу вам с оформлением займа. Есть вопросы?", isBot: true, timestamp: new Date() }
+  ]);
+  const [newMessage, setNewMessage] = useState('');
+  const [isTyping, setIsTyping] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -82,20 +87,80 @@ const Index = () => {
     );
   };
 
+  const sendMessage = async () => {
+    if (!newMessage.trim()) return;
+    
+    const userMessage = {
+      id: Date.now(),
+      text: newMessage,
+      isBot: false,
+      timestamp: new Date()
+    };
+    
+    setChatMessages(prev => [...prev, userMessage]);
+    setNewMessage('');
+    setIsTyping(true);
+    
+    // Симуляция запроса к боту с токеном
+    setTimeout(() => {
+      const botResponses = [
+        "Для займа до 50000₽ нужен только паспорт!",
+        "Рассмотрение займа занимает до 10 минут",
+        "Ставка 0.08% в день - одна из самых низких на рынке",
+        "Первый займ для новых клиентов под 0%!",
+        "Деньги поступят на карту в течение 15 минут"
+      ];
+      
+      const randomResponse = botResponses[Math.floor(Math.random() * botResponses.length)];
+      
+      const botMessage = {
+        id: Date.now() + 1,
+        text: randomResponse,
+        isBot: true,
+        timestamp: new Date()
+      };
+      
+      setChatMessages(prev => [...prev, botMessage]);
+      setIsTyping(false);
+    }, 1500);
+  };
+
+  const quickQuestions = [
+    "Какие документы нужны?",
+    "Сколько займет рассмотрение?",
+    "Какая максимальная сумма?",
+    "Есть ли скрытые комиссии?"
+  ];
+
+  const handleQuickQuestion = (question: string) => {
+    setNewMessage(question);
+    sendMessage();
+  };
+
   const ChatWidget = () => (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed top-20 left-6 z-50">
       <Button
         onClick={() => setIsChatOpen(!isChatOpen)}
         className="rounded-full w-16 h-16 bg-secondary hover:bg-secondary/90 shadow-lg animate-bounce-gentle"
       >
         <Icon name="MessageCircle" size={24} />
+        {chatMessages.length > 1 && (
+          <Badge className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
+            {chatMessages.length - 1}
+          </Badge>
+        )}
       </Button>
       
       {isChatOpen && (
-        <Card className="absolute bottom-20 right-0 w-80 h-96 animate-slide-up">
-          <CardHeader className="bg-primary text-white rounded-t-lg">
+        <Card className="absolute top-20 left-0 w-96 h-[500px] animate-slide-up shadow-2xl">
+          <CardHeader className="bg-gradient-to-r from-primary to-secondary text-white rounded-t-lg">
             <CardTitle className="flex items-center justify-between">
-              <span>Поддержка</span>
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
+                  <Icon name="Bot" size={16} />
+                </div>
+                <span>Помощник МФО</span>
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
@@ -106,29 +171,71 @@ const Index = () => {
               </Button>
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-4 space-y-4">
-            <div className="bg-gray-100 p-3 rounded-lg">
-              <p className="text-sm">Здравствуйте! Как могу помочь с оформлением займа?</p>
+          
+          <CardContent className="flex flex-col h-full p-0">
+            <div className="flex-1 p-4 space-y-3 overflow-y-auto max-h-80">
+              {chatMessages.map((message) => (
+                <div 
+                  key={message.id} 
+                  className={`flex ${message.isBot ? 'justify-start' : 'justify-end'} animate-fade-in`}
+                >
+                  <div className={`max-w-[80%] p-3 rounded-lg ${
+                    message.isBot 
+                      ? 'bg-gray-100 text-gray-800' 
+                      : 'bg-primary text-white'
+                  }`}>
+                    <p className="text-sm">{message.text}</p>
+                    <p className="text-xs opacity-70 mt-1">
+                      {message.timestamp.toLocaleTimeString()}
+                    </p>
+                  </div>
+                </div>
+              ))}
+              
+              {isTyping && (
+                <div className="flex justify-start animate-fade-in">
+                  <div className="bg-gray-100 p-3 rounded-lg">
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="space-y-2">
-              <Button variant="outline" size="sm" className="w-full justify-start">
-                <Icon name="Calculator" size={16} className="mr-2" />
-                Помощь с калькулятором
-              </Button>
-              <Button variant="outline" size="sm" className="w-full justify-start">
-                <Icon name="FileText" size={16} className="mr-2" />
-                Документы для займа
-              </Button>
-              <Button variant="outline" size="sm" className="w-full justify-start">
-                <Icon name="Clock" size={16} className="mr-2" />
-                Сроки рассмотрения
-              </Button>
-            </div>
-            <div className="flex space-x-2">
-              <Input placeholder="Ваш вопрос..." className="flex-1" />
-              <Button size="sm">
-                <Icon name="Send" size={16} />
-              </Button>
+            
+            <div className="p-4 border-t space-y-3">
+              <div className="grid grid-cols-2 gap-2">
+                {quickQuestions.map((question, index) => (
+                  <Button
+                    key={index}
+                    variant="outline"
+                    size="sm"
+                    className="text-xs h-8 justify-start"
+                    onClick={() => handleQuickQuestion(question)}
+                  >
+                    {question}
+                  </Button>
+                ))}
+              </div>
+              
+              <div className="flex space-x-2">
+                <Input
+                  placeholder="Напишите ваш вопрос..."
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
+                  className="flex-1"
+                />
+                <Button 
+                  size="sm" 
+                  onClick={sendMessage}
+                  disabled={!newMessage.trim() || isTyping}
+                >
+                  <Icon name="Send" size={16} />
+                </Button>
+              </div>
             </div>
           </CardContent>
         </Card>
