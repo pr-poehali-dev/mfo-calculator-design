@@ -254,9 +254,9 @@ const Index = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <Icon name="Banknote" size={24} className="text-white" />
+                <span className="text-white font-bold text-lg">5</span>
               </div>
-              <h1 className="text-2xl font-bold text-gray-900">МФО Финанс</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Фин5</h1>
             </div>
             <nav className="hidden md:flex space-x-6">
               <a href="#" className="text-gray-600 hover:text-primary transition-colors">Займы</a>
@@ -564,7 +564,7 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h4 className="text-lg font-bold mb-4">МФО Финанс</h4>
+              <h4 className="text-lg font-bold mb-4">Фин5</h4>
               <p className="text-gray-400">Надежный партнер в мире микрофинансирования</p>
             </div>
             <div>
@@ -593,7 +593,7 @@ const Index = () => {
             </div>
           </div>
           <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 МФО Финанс. Все права защищены.</p>
+            <p>&copy; 2024 Фин5. Все права защищены.</p>
           </div>
         </div>
       </footer>
@@ -697,7 +697,7 @@ const Index = () => {
           <DialogHeader>
             <DialogTitle className="flex items-center space-x-2">
               <Icon name="Building" size={24} />
-              <span>О компании МФО Финанс</span>
+              <span>О компании Фин5</span>
             </DialogTitle>
           </DialogHeader>
           
