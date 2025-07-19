@@ -24,6 +24,10 @@ const Index = () => {
   ]);
   const [newMessage, setNewMessage] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [loginPhone, setLoginPhone] = useState('');
+  const [userProfile, setUserProfile] = useState(null);
   const [formData, setFormData] = useState({
     fullName: '',
     phone: '',
@@ -256,9 +260,18 @@ const Index = () => {
             </div>
             <nav className="hidden md:flex space-x-6">
               <a href="#" className="text-gray-600 hover:text-primary transition-colors">Займы</a>
-              <a href="#" className="text-gray-600 hover:text-primary transition-colors">О нас</a>
+              <Button 
+                variant="ghost" 
+                onClick={() => setIsAboutOpen(true)}
+                className="text-gray-600 hover:text-primary"
+              >
+                О нас
+              </Button>
               <a href="#" className="text-gray-600 hover:text-primary transition-colors">Контакты</a>
-              <Button variant="outline">
+              <Button 
+                variant="outline"
+                onClick={() => setIsProfileOpen(true)}
+              >
                 <Icon name="User" size={16} className="mr-2" />
                 Личный кабинет
               </Button>
@@ -586,6 +599,204 @@ const Index = () => {
       </footer>
 
       <ChatWidget />
+
+      {/* Личный кабинет */}
+      <Dialog open={isProfileOpen} onOpenChange={setIsProfileOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <Icon name="User" size={24} />
+              <span>Личный кабинет</span>
+            </DialogTitle>
+          </DialogHeader>
+          
+          {!userProfile ? (
+            <div className="space-y-4">
+              <p className="text-gray-600">Войдите по номеру телефона для доступа к личному кабинету</p>
+              <div>
+                <Label htmlFor="loginPhone">Номер телефона</Label>
+                <Input
+                  id="loginPhone"
+                  value={loginPhone}
+                  onChange={(e) => setLoginPhone(e.target.value)}
+                  placeholder="+7 (999) 123-45-67"
+                />
+              </div>
+              <Button 
+                className="w-full"
+                onClick={() => {
+                  if (loginPhone) {
+                    setUserProfile({
+                      phone: loginPhone,
+                      name: 'Иван Иванов',
+                      applications: [
+                        { id: 1, amount: 25000, status: 'approved', date: '15.01.2024' },
+                        { id: 2, amount: 15000, status: 'paid', date: '10.12.2023' }
+                      ]
+                    });
+                    toast({
+                      title: "Вход выполнен",
+                      description: "Добро пожаловать в личный кабинет!"
+                    });
+                  }
+                }}
+              >
+                Войти
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="font-semibold mb-2">Профиль</h3>
+                <p><strong>Имя:</strong> {userProfile.name}</p>
+                <p><strong>Телефон:</strong> {userProfile.phone}</p>
+              </div>
+              
+              <div>
+                <h3 className="font-semibold mb-4">История заявок</h3>
+                <div className="space-y-3">
+                  {userProfile.applications.map((app) => (
+                    <Card key={app.id} className="p-3">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="font-medium">{app.amount.toLocaleString()} ₽</p>
+                          <p className="text-sm text-gray-500">{app.date}</p>
+                        </div>
+                        <Badge className={
+                          app.status === 'approved' ? 'bg-green-100 text-green-800' :
+                          app.status === 'paid' ? 'bg-blue-100 text-blue-800' :
+                          'bg-yellow-100 text-yellow-800'
+                        }>
+                          {app.status === 'approved' ? 'Одобрен' :
+                           app.status === 'paid' ? 'Погашен' : 'В обработке'}
+                        </Badge>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+              
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => {
+                  setUserProfile(null);
+                  setLoginPhone('');
+                }}
+              >
+                Выйти
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* О компании */}
+      <Dialog open={isAboutOpen} onOpenChange={setIsAboutOpen}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center space-x-2">
+              <Icon name="Building" size={24} />
+              <span>О компании МФО Финанс</span>
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Наша миссия</h3>
+                <p className="text-gray-600">
+                  Предоставлять быстрые и доступные финансовые решения для каждого клиента, 
+                  помогая решать жизненные задачи без лишних сложностей.
+                </p>
+              </div>
+              
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Преимущества</h3>
+                <ul className="space-y-2 text-gray-600">
+                  <li className="flex items-center">
+                    <Icon name="Check" size={16} className="text-green-500 mr-2" />
+                    Рассмотрение за 10 минут
+                  </li>
+                  <li className="flex items-center">
+                    <Icon name="Check" size={16} className="text-green-500 mr-2" />
+                    Без скрытых комиссий
+                  </li>
+                  <li className="flex items-center">
+                    <Icon name="Check" size={16} className="text-green-500 mr-2" />
+                    Прозрачные условия
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            <div className="bg-gradient-to-r from-primary to-secondary p-6 rounded-lg text-white">
+              <h3 className="text-xl font-bold mb-3">Статистика компании</h3>
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div>
+                  <div className="text-2xl font-bold">50,000+</div>
+                  <div className="text-sm opacity-90">Довольных клиентов</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold">5 лет</div>
+                  <div className="text-sm opacity-90">На рынке</div>
+                </div>
+                <div>
+                  <div className="text-2xl font-bold">98%</div>
+                  <div className="text-sm opacity-90">Одобренных заявок</div>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Лицензии и сертификаты</h3>
+              <div className="grid md:grid-cols-2 gap-4">
+                <Card className="p-4">
+                  <div className="flex items-center space-x-3">
+                    <Icon name="Shield" size={24} className="text-primary" />
+                    <div>
+                      <p className="font-medium">Лицензия ЦБ РФ</p>
+                      <p className="text-sm text-gray-500">№ 2110177000001</p>
+                    </div>
+                  </div>
+                </Card>
+                
+                <Card className="p-4">
+                  <div className="flex items-center space-x-3">
+                    <Icon name="Award" size={24} className="text-secondary" />
+                    <div>
+                      <p className="font-medium">ISO 27001</p>
+                      <p className="text-sm text-gray-500">Безопасность данных</p>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Контактная информация</h3>
+              <div className="space-y-2 text-gray-600">
+                <p className="flex items-center">
+                  <Icon name="Phone" size={16} className="mr-2" />
+                  8 (800) 123-45-67 (бесплатно по России)
+                </p>
+                <p className="flex items-center">
+                  <Icon name="Mail" size={16} className="mr-2" />
+                  info@mfo-finans.ru
+                </p>
+                <p className="flex items-center">
+                  <Icon name="MapPin" size={16} className="mr-2" />
+                  г. Москва, ул. Тверская, д. 1, стр. 1
+                </p>
+                <p className="flex items-center">
+                  <Icon name="Clock" size={16} className="mr-2" />
+                  Круглосуточно, без выходных
+                </p>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
