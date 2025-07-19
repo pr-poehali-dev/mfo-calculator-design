@@ -51,7 +51,7 @@ const Index = () => {
     setLoanDays(value[0]);
   };
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
     if (!formData.agreement) {
       toast({
         title: "Ошибка",
@@ -60,10 +60,44 @@ const Index = () => {
       });
       return;
     }
+
+    // Отправка данных на почту
+    try {
+      const emailData = {
+        to: 'finanpro862@gmail.com',
+        subject: `Новая заявка на займ - ${formData.fullName}`,
+        body: `
+Новая заявка на займ:
+
+ФИО: ${formData.fullName}
+Телефон: ${formData.phone}
+Email: ${formData.email}
+Паспорт: ${formData.passport}
+Доход: ${formData.income}
+Место работы: ${formData.workPlace}
+Цель займа: ${formData.purpose}
+
+Сумма займа: ${loanAmount.toLocaleString()} ₽
+Срок: ${loanDays} дней
+К возврату: ${Math.round(loanAmount * (1 + (0.08 / 100) * loanDays)).toLocaleString()} ₽
+
+Дата подачи: ${new Date().toLocaleString('ru-RU')}
+        `.trim()
+      };
+
+      console.log('Отправка данных на почту:', emailData);
+      
+      // Здесь будет реальная отправка через API
+      // await fetch('/api/send-email', { method: 'POST', body: JSON.stringify(emailData) });
+      
+    } catch (error) {
+      console.error('Ошибка отправки:', error);
+    }
+
     setApplicationStep(2);
     toast({
       title: "Заявка отправлена!",
-      description: "Рассмотрение займет до 1 минуты",
+      description: "Данные отправлены на рассмотрение",
     });
   };
 
