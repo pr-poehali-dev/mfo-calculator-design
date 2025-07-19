@@ -152,7 +152,7 @@ const Index = () => {
       </Button>
       
       {isChatOpen && (
-        <Card className="absolute top-20 left-0 w-96 h-[500px] animate-slide-up shadow-2xl">
+        <Card className="absolute top-20 left-0 w-80 h-96 animate-slide-up shadow-2xl">
           <CardHeader className="bg-gradient-to-r from-primary to-secondary text-white rounded-t-lg">
             <CardTitle className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
@@ -173,7 +173,7 @@ const Index = () => {
           </CardHeader>
           
           <CardContent className="flex flex-col h-full p-0">
-            <div className="flex-1 p-4 space-y-3 overflow-y-auto max-h-80">
+            <div className="flex-1 p-3 space-y-2 overflow-y-auto max-h-56">
               {chatMessages.map((message) => (
                 <div 
                   key={message.id} 
