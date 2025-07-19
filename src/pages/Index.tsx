@@ -63,12 +63,12 @@ const Index = () => {
     setApplicationStep(2);
     toast({
       title: "Заявка отправлена!",
-      description: "Рассмотрение займет до 10 минут",
+      description: "Рассмотрение займет до 1 минуты",
     });
   };
 
   const ApplicationTimer = () => {
-    const [timeLeft, setTimeLeft] = useState(600); // 10 минут
+    const [timeLeft, setTimeLeft] = useState(60); // 1 минута
 
     useEffect(() => {
       if (timeLeft > 0) {
@@ -86,7 +86,7 @@ const Index = () => {
           {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
         </div>
         <p className="text-muted-foreground">Осталось времени на рассмотрение</p>
-        <Progress value={(600 - timeLeft) / 6} className="w-full" />
+        <Progress value={(60 - timeLeft) / 0.6} className="w-full" />
       </div>
     );
   };
@@ -284,7 +284,7 @@ const Index = () => {
       <main className="container mx-auto px-4 py-8">
         <section className="grid md:grid-cols-2 gap-12 items-center mb-16">
           <div className="space-y-6 animate-fade-in">
-            <Badge className="bg-secondary text-black">Одобрение за 10 минут</Badge>
+            <Badge className="bg-secondary text-black">Одобрение за 1 минуту</Badge>
             <h2 className="text-5xl font-bold text-gray-900 leading-tight">
               Займы до <span className="text-primary">50 000 ₽</span> на выгодных условиях
             </h2>
@@ -542,7 +542,7 @@ const Index = () => {
               <Icon name="Zap" size={32} className="text-white" />
             </div>
             <h3 className="text-xl font-bold mb-2">Быстрое одобрение</h3>
-            <p className="text-gray-600">Рассмотрение заявки занимает до 10 минут</p>
+            <p className="text-gray-600">Рассмотрение заявки занимает до 1 минуты</p>
           </Card>
           
           <Card className="text-center p-6 hover:shadow-lg transition-all duration-300 hover:scale-105">
