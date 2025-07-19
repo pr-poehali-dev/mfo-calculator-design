@@ -291,7 +291,7 @@ const Index = () => {
             <p className="text-xl text-gray-600">
               Быстрое получение денег на карту. Минимум документов, максимум удобства.
             </p>
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-4 mb-6">
               <div className="flex items-center space-x-2">
                 <Icon name="Clock" size={20} className="text-secondary" />
                 <span>До 30 дней</span>
@@ -305,6 +305,16 @@ const Index = () => {
                 <span>100% безопасно</span>
               </div>
             </div>
+            
+            <Button 
+              size="lg"
+              variant="outline"
+              onClick={() => setIsProfileOpen(true)}
+              className="bg-white border-2 border-primary text-primary hover:bg-primary hover:text-white font-semibold px-8 py-3"
+            >
+              <Icon name="LogIn" size={20} className="mr-2" />
+              Войти в личный кабинет
+            </Button>
           </div>
           
           <div className="flex justify-center animate-scale-in">
