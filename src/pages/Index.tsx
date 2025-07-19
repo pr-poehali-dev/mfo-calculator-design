@@ -271,9 +271,10 @@ const Index = () => {
               <Button 
                 variant="outline"
                 onClick={() => setIsProfileOpen(true)}
+                className="hover:bg-primary hover:text-white transition-colors"
               >
-                <Icon name="User" size={16} className="mr-2" />
-                Личный кабинет
+                <Icon name="LogIn" size={16} className="mr-2" />
+                Войти
               </Button>
             </nav>
           </div>
