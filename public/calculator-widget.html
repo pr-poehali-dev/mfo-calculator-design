@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор займа - Фин5</title>
+    <style>
+        .loan-calculator {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 24px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .calculator-header {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            color: white;
+            padding: 20px;
+            border-radius: 12px 12px 0 0;
+            margin: -24px -24px 24px -24px;
+            text-align: center;
+        }
+        .calculator-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .slider-group {
+            margin-bottom: 24px;
+        }
+        .slider-label {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: block;
+            color: #374151;
+        }
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e5e7eb;
+            outline: none;
+            -webkit-appearance: none;
+            margin-bottom: 8px;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #3b82f6;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        .slider-range {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        .result-box {
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .result-row:last-child {
+            margin-bottom: 0;
+            padding-top: 12px;
+            border-top: 1px solid #e5e7eb;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        .result-amount {
+            font-weight: 600;
+        }
+        .overpayment {
+            color: #f59e0b;
+        }
+        .total-amount {
+            color: #3b82f6;
+        }
+        .apply-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .apply-button:hover {
+            transform: translateY(-2px);
+        }
+        .powered-by {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+        .powered-by a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="loan-calculator" id="loanCalculator">
+        <div class="calculator-header">
+            <h2 class="calculator-title">
+                🧮 Калькулятор займа
+            </h2>
+        </div>
+        
+        <div class="slider-group">
+            <label class="slider-label">
+                Сумма займа: <span id="amountValue">15000</span> ₽
+            </label>
+            <input 
+                type="range" 
+                class="slider" 
+                id="amountSlider"
+                min="1000" 
+                max="50000" 
+                step="1000" 
+                value="15000"
+            >
+            <div class="slider-range">
+                <span>1 000 ₽</span>
+                <span>50 000 ₽</span>
+            </div>
+        </div>
+
+        <div class="slider-group">
+            <label class="slider-label">
+                Срок займа: <span id="daysValue">14</span> дней
+            </label>
+            <input 
+                type="range" 
+                class="slider" 
+                id="daysSlider"
+                min="1" 
+                max="30" 
+                step="1" 
+                value="14"
+            >
+            <div class="slider-range">
+                <span>1 день</span>
+                <span>30 дней</span>
+            </div>
+        </div>
+
+        <div class="result-box">
+            <div class="result-row">
+                <span>Сумма займа:</span>
+                <span class="result-amount" id="loanAmount">15 000 ₽</span>
+            </div>
+            <div class="result-row">
+                <span>Переплата:</span>
+                <span class="result-amount overpayment" id="overpayment">168 ₽</span>
+            </div>
+            <div class="result-row">
+                <span>К возврату:</span>
+                <span class="result-amount total-amount" id="totalAmount">15 168 ₽</span>
+            </div>
+        </div>
+
+        <button class="apply-button" onclick="applyForLoan()">
+            💰 Подать заявку
+        </button>
+
+        <div class="powered-by">
+            Powered by <a href="https://fin5.ru" target="_blank">Фин5</a>
+        </div>
+    </div>
+
+    <script>
+        // Конфигурация
+        const DAILY_RATE = 0.08; // 0.08% в день
+        const TARGET_URL = 'https://fin5.ru'; // URL для перехода
+
+        // Элементы
+        const amountSlider = document.getElementById('amountSlider');
+        const daysSlider = document.getElementById('daysSlider');
+        const amountValue = document.getElementById('amountValue');
+        const daysValue = document.getElementById('daysValue');
+        const loanAmount = document.getElementById('loanAmount');
+        const overpayment = document.getElementById('overpayment');
+        const totalAmount = document.getElementById('totalAmount');
+
+        // Функция расчета
+        function calculateLoan() {
+            const amount = parseInt(amountSlider.value);
+            const days = parseInt(daysSlider.value);
+            
+            const overpaymentAmount = Math.round(amount * (DAILY_RATE / 100) * days);
+            const total = amount + overpaymentAmount;
+
+            // Обновляем значения
+            amountValue.textContent = amount.toLocaleString();
+            daysValue.textContent = days;
+            loanAmount.textContent = amount.toLocaleString() + ' ₽';
+            overpayment.textContent = overpaymentAmount.toLocaleString() + ' ₽';
+            totalAmount.textContent = total.toLocaleString() + ' ₽';
+        }
+
+        // Обработчики событий
+        amountSlider.addEventListener('input', calculateLoan);
+        daysSlider.addEventListener('input', calculateLoan);
+
+        // Функция подачи заявки
+        function applyForLoan() {
+            const amount = amountSlider.value;
+            const days = daysSlider.value;
+            
+            // Переход на основной сайт с параметрами
+            const url = `${TARGET_URL}?amount=${amount}&days=${days}`;
+            window.open(url, '_blank');
+        }
+
+        // Инициализация
+        calculateLoan();
+    </script>
+</body>
+</html>
