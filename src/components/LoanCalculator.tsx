@@ -27,7 +27,7 @@ const LoanCalculator: React.FC<LoanCalculatorProps> = ({
   return (
     <section className="mb-16">
       <Card className="max-w-2xl mx-auto shadow-2xl animate-slide-up">
-        <CardHeader className="bg-gradient-to-r from-primary to-secondary text-white">
+        <CardHeader className="bg-gradient-to-r from-primary to-secondary text-white rounded-t-lg">
           <CardTitle className="text-2xl text-center flex items-center justify-center space-x-2">
             <img 
               src="/img/7d489d0d-735c-4338-a386-1d54b9e47384.jpg" 
